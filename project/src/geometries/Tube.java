@@ -4,6 +4,8 @@ import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 public class Tube implements Geometry {
     Ray axisRay;
     double radius;
@@ -40,5 +42,10 @@ public class Tube implements Geometry {
                 "axisRay=" + axisRay +
                 ", radius=" + radius +
                 '}';
+    }
+
+    @Override
+    public List<Point3D> findIntsersections(Ray ray) {
+        return null;
     }
 }
