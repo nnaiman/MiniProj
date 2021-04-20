@@ -91,6 +91,20 @@ public class Polygon implements Geometry {
 
     @Override
     public List<Point3D> findIntsersections(Ray ray) {
-        return null;
+        List<Point3D> l = plane.findIntsersections(ray);
+        if (l == null)
+            return null;
+        List<Vector> LV = null;
+        for (int i = 0; i < vertices.size(); ++i) {
+            LV.add(vertices.get(i).subtract(ray.getP0()));
+        }
+        for (int i = 0; i < vertices.size() - 1; ++i) {
+            try {
+                LV.get(i).crossProduct(LV.get(i + 1)).normalize();
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return l;
     }
 }
