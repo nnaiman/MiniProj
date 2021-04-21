@@ -15,10 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GeometriesTest {
 
     @Test
-    void add() {
-    }
-
-    @Test
     void findIntersections() {
         Polygon p = new Polygon(new Point3D(-1, -1, 0), new Point3D(-1, 1, 0), new Point3D(1, 1, 0), new Point3D(1, -1, 0));
         Sphere s1 = new Sphere(new Point3D(0, 0, 0), 4);

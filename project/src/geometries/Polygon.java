@@ -99,13 +99,33 @@ public class Polygon implements Geometry {
         for (int i = 0; i < vertices.size(); ++i) {
             LV.add(vertices.get(i).subtract(ray.getP0()));
         }
+        List<Vector>LV1=new ArrayList<>();
         for (int i = 0; i < vertices.size() - 1; ++i) {
             try {
-                LV.get(i).crossProduct(LV.get(i + 1)).normalize();
+                LV1.add(LV.get(i).crossProduct(LV.get(i + 1)).normalize());
             } catch (Exception e) {
                 return null;
             }
         }
+        try {
+            LV1.add(LV.get(vertices.size()-1).crossProduct(LV.get(0)).normalize());
+        } catch (Exception e) {
+            return null;
+        }
+        if(LV1.get(0).dotProduct(ray.getDir())>0){
+            for (int i=1;i< LV1.size();++i){
+                if(LV1.get(i).dotProduct(ray.getDir())<0)
+                    return null;
+            }
+        }
+        else if(LV1.get(0).dotProduct(ray.getDir())<0){
+            for (int i=1;i< LV1.size();++i){
+                if(LV1.get(i).dotProduct(ray.getDir())>0)
+                    return null;
+            }
+        }
+        else
+            return null;
         return l;
     }
 }

@@ -100,11 +100,11 @@ public class PolygonTests {
         //TC01: point doesn't on the plane and no intersection
         assertTrue("point doesn't on the plane",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0,0,1),new Vector(1,0,0)))==null);
         //TC02: point doesn't on the plane and there is inrtersection
-        assertTrue("point doesn't on the plane and there is intersection",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0,0,1),new Vector(0,0,1))).get(0).equals(Point3D.ZERO));
+        assertTrue("point doesn't on the plane and there is intersection",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0.5,0.5,-1),new Vector(0,0,1))).get(0).equals(new Point3D(0.5,0.5,0)));
 
         // =============== Boundary Values Tests ==================
         //TC03: point on the plane
-        assertTrue("point on the plane",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(2,2,0),new Vector(1,0,0)))==null);
+        assertTrue("point on the plane",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(2,2,0),new Vector(0,0,-1)))==null);
         //TC04: point on the vertice
         assertTrue("point on the vertice",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0,0,0),new Vector(1,0,0)))==null);
         //TC05: point on the edge

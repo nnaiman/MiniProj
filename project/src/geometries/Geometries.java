@@ -23,12 +23,15 @@ public class Geometries implements Intersectable{
 
     @Override
     public List<Point3D> findIntersections(Ray ray) {
-        if (geometries==null)
+        if (geometries.size()==0)
             return null;
         List<Point3D>l=new ArrayList<>();
+        List<Point3D>ltmp=new ArrayList<>();
         for (int i=0;i<geometries.size();++i){
-            l.addAll(geometries.get(i).findIntersections(ray));
+            ltmp=geometries.get(i).findIntersections(ray);
+            if(ltmp!=null)
+                l.addAll(ltmp);
         }
-        return l;
+        return l.size()>0?l:null;
     }
 }
