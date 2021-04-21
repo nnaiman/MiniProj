@@ -8,6 +8,6 @@ import java.util.List;
 /**
  *
  */
-public interface Intersactable {
+public interface Intersectable {
     List<Point3D> findIntersections(Ray ray);
 }
