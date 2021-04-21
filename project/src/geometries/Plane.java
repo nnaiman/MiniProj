@@ -4,7 +4,7 @@ import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.List;
+import java.util.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -48,14 +48,13 @@ public class Plane implements Geometry {
     }
 
     @Override
-    public List<Point3D> findIntsersections(Ray ray) {
+    public List<Point3D> findIntersections(Ray ray) {
         if (isZero(normal.dotProduct(ray.getDir())))
             return null;
         double t = alignZero(normal.dotProduct(q0.subtract(ray.getP0())) / normal.dotProduct(ray.getDir()));
-        List<Point3D> l = null;
-        if (t>0)
-            l.add(ray.getP0());
-        else
+        if (t==0||t<0)
+            return null;
+        List<Point3D> l = new ArrayList<>();
             l.add(ray.getP0().add(ray.getDir().scale(t)));
         return l;
     }

@@ -5,6 +5,7 @@ import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,11 +91,11 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public List<Point3D> findIntsersections(Ray ray) {
-        List<Point3D> l = plane.findIntsersections(ray);
+    public List<Point3D> findIntersections(Ray ray) {
+        List<Point3D> l = plane.findIntersections(ray);
         if (l == null)
             return null;
-        List<Vector> LV = null;
+        List<Vector> LV = new ArrayList<>();
         for (int i = 0; i < vertices.size(); ++i) {
             LV.add(vertices.get(i).subtract(ray.getP0()));
         }

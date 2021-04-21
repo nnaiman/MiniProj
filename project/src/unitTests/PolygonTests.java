@@ -6,8 +6,10 @@ import geometries.Polygon;
 import org.junit.Assert;
 import org.junit.Test;
 import primitives.Point3D;
+import primitives.Ray;
 import primitives.Vector;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -92,5 +94,22 @@ public class PolygonTests {
         double sqrt3 = Math.sqrt(1d / 3);
         Assert.assertTrue("Bad normal to trinagle",new Vector(sqrt3, sqrt3, sqrt3).equals(pl.getNormal(new Point3D(0, 0, 1)))||new Vector(sqrt3, sqrt3, sqrt3).equals(pl.getNormal(new Point3D(0, 0, 1)).scale(-1)));
     }
+    @Test
+    public void testFindIntersections(){
+        // ============ Equivalence Partitions Tests ==============
+        //TC01: point doesn't on the plane and no intersection
+        assertTrue("point doesn't on the plane",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0,0,1),new Vector(1,0,0)))==null);
+        //TC02: point doesn't on the plane and there is inrtersection
+        assertTrue("point doesn't on the plane and there is intersection",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0,0,1),new Vector(0,0,1))).get(0).equals(Point3D.ZERO));
 
+        // =============== Boundary Values Tests ==================
+        //TC03: point on the plane
+        assertTrue("point on the plane",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(2,2,0),new Vector(1,0,0)))==null);
+        //TC04: point on the vertice
+        assertTrue("point on the vertice",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0,0,0),new Vector(1,0,0)))==null);
+        //TC05: point on the edge
+        assertTrue("point on the edge",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0.5,0,0),new Vector(1,0,0)))==null);
+        //TC06: point in polygon
+        assertTrue("point in polygon",new Polygon(new Point3D(1,0,0),new Point3D(0,0,0),new Point3D(0,1,0),new Point3D(1,1,0)).findIntersections(new Ray(new Point3D(0.5,0.5,0),new Vector(1,0,0)))==null);
+    }
 }

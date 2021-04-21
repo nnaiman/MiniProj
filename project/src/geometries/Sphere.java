@@ -4,9 +4,11 @@ import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Math.sqrt;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 public class Sphere implements Geometry {
     Point3D center;
@@ -39,16 +41,27 @@ public class Sphere implements Geometry {
     }
 
     @Override
-    public List<Point3D> findIntsersections(Ray ray) {
-        Vector u = center.subtract(ray.getP0());
+    public List<Point3D> findIntersections(Ray ray) {
+        Vector u=null;
+        try {
+            u = center.subtract(ray.getP0());
+        }
+        catch (Exception e){
+            List<Point3D>l=new ArrayList<>();
+            l.add(center.add(ray.getDir().scale(radius)));
+            return l;
+        }
         double tm = ray.getDir().dotProduct(u);
         double d = sqrt(u.lengthSquared() - tm * tm);
-        if (d > radius)
+        if (alignZero(d - radius) >= 0)
             return null;
         double th = sqrt(radius * radius - d * d);
-        List<Point3D> l = null;
-        l.add(ray.getP0().add(ray.getDir().scale(tm + th)));
-        if (d != radius)
+        if (alignZero(tm - th) <= 0 && alignZero(tm + th) <= 0)
+            return null;
+        List<Point3D> l = new ArrayList<>();
+        if (!isZero(tm + th))
+            l.add(ray.getP0().add(ray.getDir().scale(tm + th)));
+        if (alignZero(tm - th) > 0)
             l.add(ray.getP0().add(ray.getDir().scale(tm - th)));
         return l;
     }
