@@ -1,5 +1,7 @@
 package primitives;
 
+import static java.lang.Math.sqrt;
+
 public class Point3D {
     public static final Point3D ZERO = new Point3D(0, 0, 0);
     Coordinate x;
@@ -26,6 +28,12 @@ public class Point3D {
 
     public Vector subtract(Point3D p) {
         return new Vector(new Coordinate(x.coord - p.x.coord), new Coordinate(y.coord - p.y.coord), new Coordinate(z.coord - p.z.coord));
+    }
+    public double distanceSquared(Point3D p){
+        return ((x.coord-p.x.coord)*(x.coord-p.x.coord)+(y.coord-p.y.coord)*(y.coord-p.y.coord)+(z.coord-p.z.coord)*(z.coord-p.z.coord));
+    }
+    public double distance (Point3D p){
+        return sqrt(distanceSquared(p));
     }
 
     public Coordinate getX() {

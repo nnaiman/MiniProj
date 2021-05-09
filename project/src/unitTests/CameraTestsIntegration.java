@@ -60,8 +60,16 @@ class CameraTestsIntegration {
     }
 
     //help function
+
+    /**
+     * do the tests for all pixels in VP
+     * @param message
+     * @param count expected
+     * @param g collection of geometries
+     * @param c the camera
+     */
     void tests(String message, int count, Geometry g, Camera c) {
-        int count1 = 0;
+        int count1 = 0;//actual
         List<Point3D> l;
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 3; ++j) {

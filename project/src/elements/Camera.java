@@ -42,6 +42,14 @@ public class Camera {
         return Right;
     }
 
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
     //endregion
     public Camera setVpSize(double width, double height) {
         if (!(alignZero(width) > 0) || !(alignZero(height) > 0))
