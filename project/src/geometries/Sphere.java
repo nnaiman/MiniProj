@@ -10,7 +10,7 @@ import static java.lang.Math.sqrt;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
-public class Sphere implements Geometry {
+public class Sphere extends Geometry {
     Point3D center;
     double radius;
 
@@ -41,14 +41,13 @@ public class Sphere implements Geometry {
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
-        Vector u=null;
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        Vector u = null;
         try {
             u = center.subtract(ray.getP0());
-        }
-        catch (Exception e){
-            List<Point3D>l=new ArrayList<>();
-            l.add(center.add(ray.getDir().scale(radius)));
+        } catch (Exception e) {
+            List<GeoPoint> l = new ArrayList<>();
+            l.add(new GeoPoint(this, center.add(ray.getDir().scale(radius))));
             return l;
         }
         double tm = ray.getDir().dotProduct(u);
@@ -58,11 +57,11 @@ public class Sphere implements Geometry {
         double th = sqrt(radius * radius - d * d);
         if (alignZero(tm - th) <= 0 && alignZero(tm + th) <= 0)
             return null;
-        List<Point3D> l = new ArrayList<>();
+        List<GeoPoint> l = new ArrayList<>();
         if (!isZero(tm + th))
-            l.add(ray.getPoint(tm + th));
+            l.add(new GeoPoint(this, ray.getPoint(tm + th)));
         if (alignZero(tm - th) > 0)
-            l.add(ray.getPoint(tm - th));
+            l.add(new GeoPoint(this, ray.getPoint(tm - th)));
         return l;
     }
 }

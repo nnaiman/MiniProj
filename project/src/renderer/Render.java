@@ -16,7 +16,7 @@ public class Render {
             throw new MissingResourceException("not all the values are okay", "Render", "1");
         for (int i = 0; i < imageWriter.getNx(); ++i)
             for (int j = 0; j < imageWriter.getNy(); ++j)
-                imageWriter.writePixel(i, j, rayTracerBase.traceRay(camera.constructRayThroughPixel((int) imageWriter.getNx(), (int) imageWriter.getNy(), j, i)));
+                imageWriter.writePixel(j, i, rayTracerBase.traceRay(camera.constructRayThroughPixel((int) imageWriter.getNx(), (int) imageWriter.getNy(), j, i)));
     }
 
     public void printGrid(int interval, Color color) {

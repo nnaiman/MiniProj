@@ -1,9 +1,6 @@
 package geometries;
 
-import primitives.Point3D;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -91,8 +88,22 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
-        List<Point3D> l = plane.findIntersections(ray);
+    public Geometry setEmission(Color emission) {
+        super.setEmission(emission);
+        plane.setEmission(emission);
+        return this;
+    }
+
+    @Override
+    public Geometry setMaterial(Material material) {
+        super.setMaterial(material);
+        plane.setMaterial(material);
+        return this;
+    }
+
+    @Override
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        List<GeoPoint> l = plane.findGeoIntersections(ray);
         if (l == null)
             return null;
         List<Vector> LV = new ArrayList<>();

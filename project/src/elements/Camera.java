@@ -8,10 +8,10 @@ import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 public class Camera {
-    final private Point3D p0;
-    final private Vector To;
-    final private Vector Up;
-    final private Vector Right;
+    private Point3D p0;
+    private Vector To;
+    private Vector Up;
+    private Vector Right;
     private double width;
     private double height;
     private double d;
@@ -84,5 +84,25 @@ public class Camera {
         else
             Pij = Pc.add((Right.scale(Xj)).add(Up.scale(Yi)));
         return new Ray(new Point3D(p0.getX(), p0.getY(), p0.getZ()), new Vector(Pij.subtract(p0).getHead()));
+    }
+
+    public Camera setWidth(double width) {
+        this.width = width;
+        return this;
+    }
+
+    public Camera setHeight(double height) {
+        this.height = height;
+        return this;
+    }
+
+    public Camera setD(double d) {
+        this.d = d;
+        return this;
+    }
+
+    public Camera setP0(Point3D p0) {
+        this.p0 = p0;
+        return this;
     }
 }

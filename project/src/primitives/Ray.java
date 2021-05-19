@@ -1,5 +1,7 @@
 package primitives;
 
+import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -28,18 +30,29 @@ public class Ray {
         return p0.add(dir.scale(t));
     }
 
-    public Point3D findClosestPoint(List<Point3D> l){
-        if(l.size()==0)
+    public Point3D findClosestPoint(List<Point3D> l) {
+        if (l.size() == 0)
             return null;
-        Point3D tmp=l.get(0);
-        for (int i=1;i<l.size();++i){
-            if(alignZero(l.get(i).distance(p0))<tmp.distance(p0))
-                tmp=l.get(i);
+        Point3D tmp = l.get(0);
+        for (int i = 1; i < l.size(); ++i) {
+            if (alignZero(l.get(i).distance(p0)) < tmp.distance(p0))
+                tmp = l.get(i);
         }
         return tmp;
     }
 
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> l){
+        if (l.size() == 0)
+            return null;
+        GeoPoint tmp = l.get(0);
+        for (int i = 1; i < l.size(); ++i) {
+            if (alignZero(l.get(i).point.distance(p0)) < tmp.point.distance(p0))
+                tmp = l.get(i);
+        }
+        return tmp;
+    }
     @Override
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
