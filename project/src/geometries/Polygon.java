@@ -102,15 +102,15 @@ public class Polygon extends Geometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
-        List<GeoPoint> l = plane.findGeoIntersections(ray);
+    public List<GeoPoint> findGeoIntersections(Ray ray, double d) {
+        List<GeoPoint> l = plane.findGeoIntersections(ray, d);
         if (l == null)
             return null;
         List<Vector> LV = new ArrayList<>();
         for (int i = 0; i < vertices.size(); ++i) {
             LV.add(vertices.get(i).subtract(ray.getP0()));
         }
-        List<Vector>LV1=new ArrayList<>();
+        List<Vector> LV1 = new ArrayList<>();
         for (int i = 0; i < vertices.size() - 1; ++i) {
             try {
                 LV1.add(LV.get(i).crossProduct(LV.get(i + 1)).normalize());
@@ -119,23 +119,21 @@ public class Polygon extends Geometry {
             }
         }
         try {
-            LV1.add(LV.get(vertices.size()-1).crossProduct(LV.get(0)).normalize());
+            LV1.add(LV.get(vertices.size() - 1).crossProduct(LV.get(0)).normalize());
         } catch (Exception e) {
             return null;
         }
-        if(LV1.get(0).dotProduct(ray.getDir())>0){
-            for (int i=1;i< LV1.size();++i){
-                if(LV1.get(i).dotProduct(ray.getDir())<0)
+        if (LV1.get(0).dotProduct(ray.getDir()) > 0) {
+            for (int i = 1; i < LV1.size(); ++i) {
+                if (LV1.get(i).dotProduct(ray.getDir()) < 0)
                     return null;
             }
-        }
-        else if(LV1.get(0).dotProduct(ray.getDir())<0){
-            for (int i=1;i< LV1.size();++i){
-                if(LV1.get(i).dotProduct(ray.getDir())>0)
+        } else if (LV1.get(0).dotProduct(ray.getDir()) < 0) {
+            for (int i = 1; i < LV1.size(); ++i) {
+                if (LV1.get(i).dotProduct(ray.getDir()) > 0)
                     return null;
             }
-        }
-        else
+        } else
             return null;
         return l;
     }

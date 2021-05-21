@@ -21,14 +21,13 @@ public class Geometries implements Intersectable {
         this.geometries.addAll(Arrays.asList(geometries.clone()));
     }
 
-    @Override
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersections(Ray ray, double d) {
         if (geometries.size() == 0)
             return null;
         List<GeoPoint> l = new ArrayList<>();
         List<GeoPoint> ltmp = new ArrayList<>();
         for (int i = 0; i < geometries.size(); ++i) {
-            ltmp = geometries.get(i).findGeoIntersections(ray);
+            ltmp = geometries.get(i).findGeoIntersections(ray, d);
             if (ltmp != null)
                 l.addAll(ltmp);
         }

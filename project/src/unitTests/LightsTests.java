@@ -117,7 +117,6 @@ public class LightsTests {
                 triangle2.setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(300)));
         scene2.lights.add(new PointLight(new Color(500, 250, 250), new Point3D(10, -10, -130)) //
                 .setkL(0.0005).setkQ(0.0005));
-
         ImageWriter imageWriter = new ImageWriter("lightTrianglesPoint", 500, 500);
         Render render = new Render()//
                 .setImageWriter(imageWriter) //
