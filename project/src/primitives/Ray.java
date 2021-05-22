@@ -9,6 +9,7 @@ import static primitives.Util.alignZero;
 public class Ray {
     Point3D p0;
     Vector dir;
+    private static final double DELTA = 0.1;
 
     //ctor
     public Ray(Point3D p0, Vector dir) {
@@ -16,6 +17,11 @@ public class Ray {
         if (dir.length() != 1)
             dir.normalize();
         this.dir = new Vector(dir.head);
+    }
+
+    public Ray(Point3D head, Vector direction, Vector normal) {
+        p0 = head.add(normal.scale(direction.dotProduct(normal) > 0 ? DELTA : -DELTA));
+        dir = direction.length() == 1 ? direction : direction.normalize();
     }
 
     public Point3D getP0() {
@@ -41,8 +47,8 @@ public class Ray {
         return tmp;
     }
 
-    public GeoPoint findClosestGeoPoint(List<GeoPoint> l){
-        if (l.size() == 0)
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> l) {
+        if (l == null || l.size() == 0)
             return null;
         GeoPoint tmp = l.get(0);
         for (int i = 1; i < l.size(); ++i) {
@@ -51,6 +57,7 @@ public class Ray {
         }
         return tmp;
     }
+
     @Override
 
     public boolean equals(Object o) {

@@ -1,7 +1,28 @@
 package primitives;
 
 public class Material {
-    public double kD = 0, kS = 0;
+    /**
+     * kD for diffusive, kS for specular
+     */
+    public double kD = 0;
+    public double kS = 0;
+
+    public Material setkT(double kT) {
+        this.kT = kT;
+        return this;
+    }
+
+    public Material setkR(double kR) {
+        this.kR = kR;
+        return this;
+    }
+
+    /**
+     * kT for refraction, kR for reflection
+     */
+    public double kT = 0;
+    public double kR = 0;
+
     public int nShininess = 0;
 
     public Material setkD(double kD) {
