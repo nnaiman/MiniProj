@@ -68,7 +68,7 @@ public class BasicRayTracer extends RayTracerBase {
     @Override
     public Color traceRay(Ray ray) {
         GeoPoint p = findClosestIntersection(ray);
-        return p == null ? Color.BLACK : calcColor(p, ray);
+        return p == null ? scene.background : calcColor(p, ray);
     }
 
     private Color calcColor(GeoPoint p, Ray ray, int level, double k) {

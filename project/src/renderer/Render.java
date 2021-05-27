@@ -22,12 +22,12 @@ public class Render {
     public void printGrid(int interval, Color color) {
         if (imageWriter == null)
             throw new MissingResourceException("imageWriter is null", "Render", "2");
-        for (int k = 0; k < imageWriter.getNx(); k += 50)
+        for (int k = 0; k < imageWriter.getNx(); k += interval)
             for (int t = 0; t < imageWriter.getNy(); ++t)
-                imageWriter.writePixel(k, t, Color.BLACK);
-        for (int k = 0; k < imageWriter.getNx(); k += 50)
+                imageWriter.writePixel(k, t, color);
+        for (int k = 0; k < imageWriter.getNx(); k += interval)
             for (int t = 0; t < imageWriter.getNy(); ++t)
-                imageWriter.writePixel(t, k, Color.BLACK);
+                imageWriter.writePixel(t, k, color);
     }
 
     public void writeToImage() {

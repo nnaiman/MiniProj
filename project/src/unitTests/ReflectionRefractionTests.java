@@ -3,11 +3,10 @@
  */
 package unitTests;
 
+import geometries.*;
 import org.junit.Test;
 
 import elements.*;
-import geometries.Sphere;
-import geometries.Triangle;
 import primitives.*;
 import renderer.*;
 import scene.Scene;
@@ -122,6 +121,59 @@ public class ReflectionRefractionTests {
 
     @Test
     public void multiGeometries() {
+        Camera camera1 = new Camera(new Point3D(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+                .setVpSize(150, 150) //
+                .setDistance(1000);
+        Geometry sphere1 = new Sphere(new Point3D(-10, -15, -50), 15) //
+                .setEmission(new Color(java.awt.Color.BLUE)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
+        Geometry sphere2 = new Sphere(new Point3D(10, -15, -50), 15) //
+                .setEmission(new Color(java.awt.Color.RED)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
+        Geometry sphere3 = new Sphere(new Point3D(-30, -15, -50), 15) //
+                .setEmission(new Color(java.awt.Color.GREEN)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
+        Geometry sphere4 = new Sphere(new Point3D(30, -15, -50), 15) //
+                .setEmission(new Color(java.awt.Color.WHITE)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
 
+        Geometry sphere5 = new Sphere(new Point3D(-20, 0, -50), 15) //
+                .setEmission(new Color(java.awt.Color.YELLOW)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
+        Geometry sphere6 = new Sphere(new Point3D(0, 0, -50), 15) //
+                .setEmission(new Color(java.awt.Color.CYAN)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
+        Geometry sphere7 = new Sphere(new Point3D(20, 0, -50), 15) //
+                .setEmission(new Color(java.awt.Color.MAGENTA)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100).setkT(0.5));
+
+        Geometry sphere8 = new Sphere(new Point3D(-43, 40, -50), 15) //
+                .setEmission(new Color(java.awt.Color.MAGENTA)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100));
+        Geometry sphere9 = new Sphere(new Point3D(-41, 38, -10), 11.5).setEmission(Color.BLACK);
+        Geometry poly1 = new Polygon(new Point3D(-33, 41, -30), new Point3D(-33, 36, -30), new Point3D(-26, 36, -30), new Point3D(-26, 41, -30));
+        Geometry sphere10 = new Sphere(new Point3D(-11.5, 40, -50), 15) //
+                .setEmission(new Color(java.awt.Color.MAGENTA)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100));
+        Geometry sphere11 = new Sphere(new Point3D(21.5, 40, -50), 15) //
+                .setEmission(new Color(java.awt.Color.MAGENTA)) //
+                .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100));
+        Geometry poly2 = new Polygon(new Point3D(63, 55, -30), new Point3D(63, 25, -30), new Point3D(38, 25, -30), new Point3D(38, 55, -30))
+                .setEmission(new Color(java.awt.Color.MAGENTA))
+                .setMaterial(new Material().setkD(0.5).setkS(0));
+        Geometry poly3 = new Polygon(new Point3D(65, 55, -20), new Point3D(65, 30, -20), new Point3D(42, 30, -20), new Point3D(42, 55, -20));
+        Geometry plane1 = new Plane(new Point3D(0, -30, -100), new Vector(0, 1, 0.02))
+                .setEmission(new Color(60,60,60)).setMaterial(new Material().setkD(0.5).setkS(0).setkR(1));
+
+        scene.geometries.add(sphere1, sphere2, sphere3, sphere4, sphere5, sphere6, sphere7, sphere8, sphere9, poly1, sphere10, sphere11, poly2, poly3, plane1);
+        scene.lights.add(new DirectionalLight(new Color(500, 300, 0), new Vector(1, 1, -1)));
+        scene.lights.add(new SpotLight(new Color(45, 89, 63), new Point3D(0, 50, -1), new Vector(0, -1, -1)));
+        scene.lights.add(new PointLight(new Color(0, 255, 0), new Point3D(0, 0, 10)));
+
+        ImageWriter imageWriter = new ImageWriter("multiGeometries", 1000, 1000);
+        Render render = new Render().setImageWriter(imageWriter).setCamera(camera1).setRayTracer(new BasicRayTracer(scene));
+        render.renderImage();
+        render.printGrid(50, new Color(20,36,54));
+        render.writeToImage();
     }
 }
