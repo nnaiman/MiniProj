@@ -171,9 +171,10 @@ public class ReflectionRefractionTests {
         scene.lights.add(new PointLight(new Color(0, 255, 0), new Point3D(0, 0, 10)));
 
         ImageWriter imageWriter = new ImageWriter("multiGeometries", 1000, 1000);
-        Render render = new Render().setImageWriter(imageWriter).setCamera(camera1).setRayTracer(new BasicRayTracer(scene));
+        Render render = new Render().setImageWriter(imageWriter).
+                setCamera(camera1).setRayTracer(new BasicRayTracer(scene)).setMultithreading(3).setDebugPrint();
         render.renderImage();
-        render.printGrid(50, new Color(20,36,54));
+        //render.printGrid(50, new Color(20,36,54));
         render.writeToImage();
     }
 }

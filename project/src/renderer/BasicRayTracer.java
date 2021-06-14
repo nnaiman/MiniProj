@@ -1,5 +1,6 @@
 package renderer;
 
+import elements.Camera;
 import elements.LightSource;
 import geometries.Intersectable.GeoPoint;
 import primitives.*;
@@ -8,8 +9,23 @@ import scene.Scene;
 import java.util.List;
 
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 public class BasicRayTracer extends RayTracerBase {
+    private Camera camera;
+
+    @Override
+    public RayTracerBase setGlossy(boolean glossy) {
+        this.glossy = glossy;
+        return this;
+    }
+
+    @Override
+    public RayTracerBase setDiffuse(boolean diffuse) {
+        this.diffuse = diffuse;
+        return this;
+    }
+
     public BasicRayTracer(Scene scene) {
         super(scene);
     }
@@ -19,10 +35,11 @@ public class BasicRayTracer extends RayTracerBase {
     }
 
     /**
-     *  * whether the geopoint is unshaded or not
+     * * whether the geopoint is unshaded or not
+     *
      * @param light
-     * @param l the vector from light source to point
-     * @param n the normal of geometry from point
+     * @param l        the vector from light source to point
+     * @param n        the normal of geometry from point
      * @param geopoint
      * @return
      */
@@ -71,12 +88,41 @@ public class BasicRayTracer extends RayTracerBase {
         return p == null ? scene.background : calcColor(p, ray);
     }
 
+    @Override
+    public Color traceRay(List<Ray> rays) {
+        Color color = Color.BLACK;
+        Color tmp;
+        for (Ray ray : rays) {
+            tmp = traceRay(ray);
+            color = color.add(tmp);
+        }
+        return color.scale(1d / rays.size());
+    }
+
     private Color calcColor(GeoPoint p, Ray ray, int level, double k) {
         if (p == null)
             return scene.background;
         Color color = p.geometry.getEmission();
         color = color.add(calcLocalEffects(p, ray, k));
         return level == 1 ? color : color.add(calcGlobalEffects(p, ray, level, k));
+    }
+
+    /**
+     * calc color for surfaces with glossy or/and diffuse
+     *
+     * @param rays
+     * @param level
+     * @param k
+     * @return
+     */
+    private Color calcColor(List<Ray> rays, int level, double k) {
+        GeoPoint p;
+        Color color = Color.BLACK;
+        for (Ray ray : rays) {
+            p = findClosestIntersection(ray);
+            color = color.add(calcColor(p, ray, level, k));
+        }
+        return color.scale(1d / rays.size());
     }
 
     private Color calcColor(GeoPoint p, Ray ray) {
@@ -139,7 +185,38 @@ public class BasicRayTracer extends RayTracerBase {
         if (alignZero(kkr - MIN_CALC_COLOR_K) > 0) {
             Ray reflectedRay = constructReflectedRay(geopoint.geometry.getNormal(geopoint.point), geopoint.point, ray);
             GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
-            color = color.add(calcColor(reflectedPoint, reflectedRay, level - 1, kkr).scale(kr));
+            if (!glossy || !scene.geometries.box.hasIntersection(reflectedRay))
+                color = color.add(calcColor(reflectedPoint, reflectedRay, level - 1, kkr).scale(kr));
+            else {
+                //region create up and right for glossy surfaces
+                double x, y, z;
+                Point3D n = geopoint.geometry.getNormal(geopoint.point).getHead();
+                Point3D t = reflectedRay.getDir().getHead();
+                double a = n.getX().getCoord();
+                double b = n.getY().getCoord();
+                double c = n.getZ().getCoord();
+                double d = t.getX().getCoord();
+                double e = t.getY().getCoord();
+                double f = t.getZ().getCoord();
+                if (!isZero(a) && !isZero((-d * b / a) + e)) {
+                    z = 1;
+                    y = ((d * c / a) - f) / ((-d * b / a) + e);
+                    x = (-b * y - c) / a;
+                } else if (!isZero(b) && !isZero((-a * e / b) + d)) {
+                    z = 1;
+                    x = ((c * e / b) - f) / ((-a * e / b) + d);
+                    y = (-a * x - c) / b;
+                } else {
+                    z = 0;
+                    y = 1;
+                    x = -e / d;
+                }
+                Vector rtmp = new Vector(x, y, z).normalize();
+                Vector u = reflectedRay.getDir().crossProduct(rtmp).normalize();
+                camera = new Camera(geopoint.point, reflectedRay.getDir(), u.dotProduct(new Vector(n)) * new Vector(t).dotProduct(new Vector(n)) > 0 ? u : u.scale(-1));
+                //endregion
+                color = color.add(calcColor(camera.constructRays(reflectedRay, false, geopoint.geometry.getMaterial().wP, geopoint.geometry.getMaterial().hP, geopoint.geometry.getMaterial().dP), level - 1, kkr).scale(kr));
+            }
         }
         double kt = material.kT, kkt = k * kt;
         if (alignZero(kkt - MIN_CALC_COLOR_K) > 0) {
@@ -147,7 +224,38 @@ public class BasicRayTracer extends RayTracerBase {
             GeoPoint refractedPoint = findClosestIntersection(refractedRay);
             if (refractedPoint != null)
                 kt = kt;
-            color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
+            if (!diffuse || !scene.geometries.box.hasIntersection(refractedRay))
+                color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
+            else {
+                //region create up and right for diffuse surfaces
+                double x, y, z;
+                Point3D n = geopoint.geometry.getNormal(geopoint.point).getHead();
+                Point3D t = refractedRay.getDir().getHead();
+                double a = n.getX().getCoord();
+                double b = n.getY().getCoord();
+                double c = n.getZ().getCoord();
+                double d = t.getX().getCoord();
+                double e = t.getY().getCoord();
+                double f = t.getZ().getCoord();
+                if (!isZero(a) && !isZero((-d * b / a) + e)) {
+                    z = 1;
+                    y = ((d * c / a) - f) / ((-d * b / a) + e);
+                    x = (-b * y - c) / a;
+                } else if (!isZero(b) && !isZero((-a * e / b) + d)) {
+                    z = 1;
+                    x = ((c * e / b) - f) / ((-a * e / b) + d);
+                    y = (-a * x - c) / b;
+                } else {
+                    z = 0;
+                    y = 1;
+                    x = -e / d;
+                }
+                Vector rtmp = new Vector(x, y, z).normalize();
+                Vector u = refractedRay.getDir().crossProduct(rtmp).normalize();
+                camera = new Camera(geopoint.point, refractedRay.getDir(), u.dotProduct(new Vector(n)) * new Vector(t).dotProduct(new Vector(n)) > 0 ? u : u.scale(-1));
+                //endregion
+                color = color.add(calcColor(camera.constructRays(refractedRay, false, geopoint.geometry.getMaterial().wP, geopoint.geometry.getMaterial().hP, geopoint.geometry.getMaterial().dP), level - 1, kkt).scale(kt));
+            }
         }
         return color;
     }

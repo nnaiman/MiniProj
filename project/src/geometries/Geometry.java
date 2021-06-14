@@ -10,6 +10,7 @@ public abstract class Geometry implements Intersectable {
 
     /**
      * getter of emission
+     *
      * @return
      */
     public Color getEmission() {
@@ -18,6 +19,7 @@ public abstract class Geometry implements Intersectable {
 
     /**
      * setter of emmission
+     *
      * @param emission
      * @return
      */
@@ -28,6 +30,17 @@ public abstract class Geometry implements Intersectable {
 
     protected Color emission = Color.BLACK;
 
+    public Geometry setBox(boolean box) {
+        this.box = box;
+        return this;
+    }
+
+    public boolean isBox() {
+        return box;
+    }
+
+    private boolean box=false;
+
     public Material getMaterial() {
         return material;
     }
@@ -37,5 +50,5 @@ public abstract class Geometry implements Intersectable {
         return this;
     }
 
-    private Material material=new Material();
+    private Material material = new Material();
 }

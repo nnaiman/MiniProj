@@ -1,8 +1,12 @@
 package elements;
 
+import geometries.Plane;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -15,6 +19,11 @@ public class Camera {
     private double width;
     private double height;
     private double d;
+    private double dFP;
+    private double wFP;
+    private double hFP;
+    private static int INTERVAL = 9;
+
 
     public Camera(Point3D p0, Vector to, Vector up) {
         this.p0 = p0;
@@ -86,6 +95,51 @@ public class Camera {
         return new Ray(new Point3D(p0.getX(), p0.getY(), p0.getZ()), new Vector(Pij.subtract(p0).getHead()));
     }
 
+    public List<Ray> constructRays(Ray ray, boolean depth, double w, double h, double distance) {
+        Point3D PcF;//Pc focal plane
+        Point3D PcV;//Pc view plane
+        Plane focalPlane;
+        Plane viewPlane;
+        Point3D multiPoint;
+        List<Point3D> listUnitPoint;
+        Point3D unitPoint;
+        if (depth) {
+            w = wFP;
+            h = hFP;
+            distance = dFP;
+            PcF = p0.add(To.scale(d + dFP));//Pc focal plane
+            PcV = p0.add(To.scale(d));//Pc view plane
+            focalPlane = new Plane(PcF, To);
+            viewPlane = new Plane(PcV, To);
+            listUnitPoint = focalPlane.findIntersections(ray);
+            unitPoint = listUnitPoint == null ? null : listUnitPoint.get(0);
+            List<Point3D> listMultiPoint = viewPlane.findIntersections(ray);
+            multiPoint = listMultiPoint == null ? null : ray.findClosestPoint(listMultiPoint);
+        } else {
+            unitPoint = ray.getP0();
+            viewPlane = new Plane(ray.getPoint(distance), ray.getDir());
+            List<Point3D> listMultiPoint = viewPlane.findIntersections(ray);
+            multiPoint = listMultiPoint == null ? null : listMultiPoint.get(0);
+        }
+
+        List<Ray> rays = new ArrayList<>();
+        Point3D sourcePoint;
+        for (int t = 0; t < INTERVAL; ++t) {
+            for (int s = 0; s < INTERVAL; ++s) {
+                if (isZero((-w / 2d) + (w * t / INTERVAL)) && isZero((h / 2d) - (h * s / INTERVAL)))
+                    sourcePoint = multiPoint;
+                else if (isZero((-w / 2d) + (w * t / INTERVAL)) && !isZero((h / 2d) - (h * s / INTERVAL)))
+                    sourcePoint = multiPoint.add(Up.scale((h / 2d) - (h * s / INTERVAL)));
+                else if (!isZero((-w / 2d) + (w * t / INTERVAL)) && isZero((h / 2d) - (h * s / INTERVAL)))
+                    sourcePoint = multiPoint.add(Right.scale((-w / 2d) + (w * t / INTERVAL)));
+                else
+                    sourcePoint = multiPoint.add(Right.scale((-w / 2d) + (w * t / INTERVAL)).add(Up.scale((h / 2d) - (h * s / INTERVAL))));
+                rays.add(new Ray(depth ? sourcePoint : unitPoint, multiPoint != sourcePoint ? (depth ? unitPoint.subtract(sourcePoint) : sourcePoint.subtract(unitPoint)) : ray.getDir()));
+            }
+        }
+        return rays;
+    }
+
     public Camera setWidth(double width) {
         this.width = width;
         return this;
@@ -103,6 +157,21 @@ public class Camera {
 
     public Camera setP0(Point3D p0) {
         this.p0 = p0;
+        return this;
+    }
+
+    public Camera setdFP(double dFP) {
+        this.dFP = dFP;
+        return this;
+    }
+
+    public Camera setwFP(double wFP) {
+        this.wFP = wFP;
+        return this;
+    }
+
+    public Camera sethFP(double hFP) {
+        this.hFP = hFP;
         return this;
     }
 }

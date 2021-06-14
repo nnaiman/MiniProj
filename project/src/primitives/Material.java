@@ -6,6 +6,14 @@ public class Material {
      */
     public double kD = 0;
     public double kS = 0;
+    public static double wP = 1;//width for glossy and diffuse
+    public static double hP = 1;//height for glossy and diffuse
+    public double dP = 20;//distance for glossy and diffuse
+
+    public Material setdP(double dP) {
+        this.dP = dP;
+        return this;
+    }
 
     public Material setkT(double kT) {
         this.kT = kT;
