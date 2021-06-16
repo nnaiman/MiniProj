@@ -19,6 +19,8 @@ public class Plane extends Geometry {
         if (normal.length() != 1)
             normal.normalize();
         this.normal = new Vector(normal.getHead());
+        box = new Box(new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE),
+                new Point3D(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE));
     }
 
     public Plane(Point3D p0, Point3D p1, Point3D p2) {
@@ -48,14 +50,14 @@ public class Plane extends Geometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersections(Ray ray,double d) {
+    public List<GeoPoint> findGeoIntersections(Ray ray, double d) {
         if (ray.getP0().equals(q0) || isZero(normal.dotProduct(ray.getDir())) || isZero(normal.dotProduct(ray.getP0().subtract(q0))))
             return null;
         double t = alignZero(normal.dotProduct(q0.subtract(ray.getP0())) / normal.dotProduct(ray.getDir()));
         if (t == 0 || t < 0)
             return null;
         List<GeoPoint> l = new ArrayList<>();
-        if (alignZero(t-d)<=0)
+        if (alignZero(t - d) <= 0)
             l.add(new GeoPoint(this, ray.getPoint(t)));
         return l;
     }

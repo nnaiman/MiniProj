@@ -1,9 +1,6 @@
 package geometries;
 
-import primitives.Color;
-import primitives.Material;
-import primitives.Point3D;
-import primitives.Vector;
+import primitives.*;
 
 public abstract class Geometry implements Intersectable {
     public abstract Vector getNormal(Point3D p);
@@ -30,16 +27,7 @@ public abstract class Geometry implements Intersectable {
 
     protected Color emission = Color.BLACK;
 
-    public Geometry setBox(boolean box) {
-        this.box = box;
-        return this;
-    }
-
-    public boolean isBox() {
-        return box;
-    }
-
-    private boolean box=false;
+    public Box box;
 
     public Material getMaterial() {
         return material;

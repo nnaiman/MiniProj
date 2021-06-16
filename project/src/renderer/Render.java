@@ -14,9 +14,9 @@ public class Render {
     RayTracerBase rayTracerBase;
     boolean depth = false;
     boolean superSampling = false;
-    private int threadsNumber = 1;
+    private int threadsNumber = 3;
     private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
-    private boolean print = false; // printing progress percentage
+    private boolean print = true; // printing progress percentage
 
     /**
      * Set multithreading <br>
@@ -90,7 +90,7 @@ public class Render {
          */
         public boolean nextPixel(Pixel target) {
             int percents = nextP(target);
-            if (print && percents > 0) System.out.printf("\r %02d%%", percents);
+            if (print && percents > 0) System.out.println(percents + "%");
             if (percents >= 0) return true;
             if (print) System.out.printf("\r %02d%%", 100);
             return false;
@@ -158,8 +158,6 @@ public class Render {
                         else
                             imageWriter.writePixel(pixel.col, pixel.row, rayTracerBase.scene.background);
                     }
-                    //List<Ray> rays = camera.constructRays(camera.constructRayThroughPixel(nX, nY, pixel.col, pixel.row), false, 1, 1, 1);
-                    //imageWriter.writePixel(pixel.col, pixel.row, rayTracerBase.traceRay(rays));
                 }
             });
         }

@@ -29,10 +29,12 @@ public class Point3D {
     public Vector subtract(Point3D p) {
         return new Vector(new Coordinate(x.coord - p.x.coord), new Coordinate(y.coord - p.y.coord), new Coordinate(z.coord - p.z.coord));
     }
-    public double distanceSquared(Point3D p){
-        return ((x.coord-p.x.coord)*(x.coord-p.x.coord)+(y.coord-p.y.coord)*(y.coord-p.y.coord)+(z.coord-p.z.coord)*(z.coord-p.z.coord));
+
+    public double distanceSquared(Point3D p) {
+        return ((x.coord - p.x.coord) * (x.coord - p.x.coord) + (y.coord - p.y.coord) * (y.coord - p.y.coord) + (z.coord - p.z.coord) * (z.coord - p.z.coord));
     }
-    public double distance (Point3D p){
+
+    public double distance(Point3D p) {
         return sqrt(distanceSquared(p));
     }
 
@@ -64,5 +66,9 @@ public class Point3D {
                 ", y=" + y +
                 ", z=" + z +
                 '}';
+    }
+
+    public double getCoord(int edge) {
+        return edge == 0 ? getX().getCoord() : (edge == 1 ? getY().getCoord() : getY().getCoord());
     }
 }

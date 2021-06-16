@@ -129,7 +129,7 @@ public class RenderTests {
                 .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100));
         scene1.geometries.add(sphere1, sphere2);
         scene1.lights.add(new DirectionalLight(new Color(500, 300, 0), new Vector(1, 1, -1)));
-
+        //scene1.geometries.buildHierarchy();
         ImageWriter imageWriter1 = new ImageWriter("withoutDOF", 500, 500);
         Render render1 = new Render()//
                 .setImageWriter(imageWriter1) //
@@ -142,7 +142,7 @@ public class RenderTests {
         Render render2 = new Render()//
                 .setImageWriter(imageWriter2) //
                 .setCamera(camera2) //
-                .setRayTracer(new BasicRayTracer(scene1)).setDepth(true).setMultithreading(2).setDebugPrint();
+                .setRayTracer(new BasicRayTracer(scene1)).setDepth(true).setMultithreading(3).setDebugPrint();
         render2.renderImage();
         render2.writeToImage();
     }
@@ -181,11 +181,11 @@ public class RenderTests {
                 .setRayTracer(new BasicRayTracer(scene));
         render1.renderImage();
         render1.writeToImage();
-
+        //scene.geometries.buildHierarchy();
         ImageWriter imageWriter2 = new ImageWriter("withGlossy", 500, 500);
         Render render2 = new Render()//
                 .setImageWriter(imageWriter2) //
-                .setCamera(camera1).setMultithreading(3) //
+                .setCamera(camera1).setMultithreading(3).setDebugPrint() //
                 .setRayTracer(new BasicRayTracer(scene).setGlossy(true));
         render2.renderImage();
         render2.writeToImage();
@@ -300,10 +300,10 @@ public class RenderTests {
         scene.lights.add(new DirectionalLight(new Color(500, 300, 0), new Vector(1, 1, -1)));
         scene.lights.add(new SpotLight(new Color(45, 89, 63), new Point3D(0, 50, -1), new Vector(0, -1, -1)));
         scene.lights.add(new PointLight(new Color(0, 255, 0), new Point3D(0, 0, 10)));
-
+        //scene.geometries.buildHierarchy();
         ImageWriter imageWriter = new ImageWriter("multiGeometries2", 1000, 1000);
         Render render = new Render().setImageWriter(imageWriter).setCamera(camera1).
-                setRayTracer(new BasicRayTracer(scene)).setSuperSampling(true).setMultithreading(3);
+                setRayTracer(new BasicRayTracer(scene)).setSuperSampling(true).setMultithreading(3).setDebugPrint();
         render.renderImage();
         //render.printGrid(50, new Color(20,36,54));
         render.writeToImage();

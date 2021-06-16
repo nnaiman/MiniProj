@@ -17,6 +17,8 @@ public class Sphere extends Geometry {
     public Sphere(Point3D p, double r) {
         center = p;
         radius = r;
+        box = new Box(new Point3D(center.getX().getCoord() + radius, center.getY().getCoord() + radius, center.getZ().getCoord() + radius),
+                new Point3D(center.getX().getCoord() - radius, center.getY().getCoord() - radius, center.getZ().getCoord() - radius));
     }
 
     @Override
