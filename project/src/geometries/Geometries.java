@@ -27,11 +27,6 @@ public class Geometries implements Intersectable {
         add(geometries);
     }
 
-    public void add(List<Intersectable> geometries) {
-        this.geometries = geometries;
-    }
-
-
     /**
      * create sub boxes according to this algorithm: https://www.haroldserrano.com/blog/visualizing-the-boundary-volume-hierarchy-collision-algorithm
      *
@@ -178,9 +173,8 @@ public class Geometries implements Intersectable {
         List<GeoPoint> l = new ArrayList<>();
         List<GeoPoint> ltmp = new ArrayList<>();
         if (!bvh) {
-            for (int i = 0; i < boxes.size(); ++i) {
-                if (bvh ? boxes.get(i).hasIntersection(ray) : true)
-                    ltmp = boxes.get(i).geometry.findGeoIntersections(ray, d);
+            for (Intersectable geometry : geometries) {
+                ltmp = geometry.findGeoIntersections(ray, d);
                 if (ltmp != null)
                     l.addAll(ltmp);
             }

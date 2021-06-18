@@ -300,10 +300,9 @@ public class RenderTests {
         scene.lights.add(new DirectionalLight(new Color(500, 300, 0), new Vector(1, 1, -1)));
         scene.lights.add(new SpotLight(new Color(45, 89, 63), new Point3D(0, 50, -1), new Vector(0, -1, -1)));
         scene.lights.add(new PointLight(new Color(0, 255, 0), new Point3D(0, 0, 10)));
-        //scene.geometries.buildHierarchy();
         ImageWriter imageWriter = new ImageWriter("multiGeometries2", 1000, 1000);
         Render render = new Render().setImageWriter(imageWriter).setCamera(camera1).
-                setRayTracer(new BasicRayTracer(scene)).setSuperSampling(true).setMultithreading(3).setDebugPrint();
+                setRayTracer(new BasicRayTracer(scene)).setSuperSampling(true).setMultithreading(1).setDebugPrint();
         render.renderImage();
         //render.printGrid(50, new Color(20,36,54));
         render.writeToImage();

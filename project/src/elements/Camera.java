@@ -22,7 +22,13 @@ public class Camera {
     private double dFP;
     private double wFP;
     private double hFP;
-    private static int INTERVAL = 9;
+
+    public Camera setINTERVAL(int INTERVAL) {
+        this.INTERVAL = INTERVAL;
+        return this;
+    }
+
+    private int INTERVAL = 8;
 
 
     public Camera(Point3D p0, Vector to, Vector up) {

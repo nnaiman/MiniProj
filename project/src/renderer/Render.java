@@ -154,7 +154,7 @@ public class Render {
                             imageWriter.writePixel(pixel.col, pixel.row, rayTracerBase.scene.background);
                     } else {
                         if (rayTracerBase.scene.geometries.box.hasIntersection(camera.constructRayThroughPixel(imageWriter.getNx(), imageWriter.getNy(), pixel.col, pixel.row)))
-                            imageWriter.writePixel(pixel.col, pixel.row, rayTracerBase.traceRay(camera.constructRays(camera.constructRayThroughPixel(imageWriter.getNx(), imageWriter.getNy(), pixel.col, pixel.row), false, 1, 1, 1000)));
+                            imageWriter.writePixel(pixel.col, pixel.row, rayTracerBase.traceRay(camera.constructRays(camera.constructRayThroughPixel(imageWriter.getNx(), imageWriter.getNy(), pixel.col, pixel.row), false, 1, 1, 5000)));
                         else
                             imageWriter.writePixel(pixel.col, pixel.row, rayTracerBase.scene.background);
                     }
